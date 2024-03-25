@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  web-app:
+    build: web-app/
+    container_name: web-app
+    ports:
+      - 5000:5000
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+
+  tg-bot:
+    build: tg-bot/
+    container_name: tg-bot
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  web-db:
+    build: web-db/
+    container_name: web-db
+    ports:
+      - 8501:8501
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: "Staff&&Projects&&Reports"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "Metra2004"
+      PGDATA: "/var/lib/postgresql/data2/pgdata"
+    volumes:
+      - data:/var/lib/postgresql/data2
+      - ./dump/dump2.sql:/docker-entrypoint-initdb.d/dump2.sql
+    ports:
+      - 5433:5432
+
+volumes:
+  data:

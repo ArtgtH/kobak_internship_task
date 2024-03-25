@@ -1,0 +1,14 @@
+credentials:
+  usernames:
+    developer:
+      logged_in: False
+      name: Артём
+      password: developer1234
+    manager:
+      logged_in: False
+      name: Менеджер
+      password: manager1234
+cookie:
+  expiry_days: 10
+  key: some_signature_key
+  name: some_cookie_name

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block meta %}
+  <meta id="my-data" data-name="projects" content="{{ projects_without_person }}">
+{% endblock %}
+
+
+{% block title %}
+  timeform
+{% endblock %}
+
+{% block content %}
+  <h1 style="margin-top: 1rem">Привет, дорогой разработчик, заполни, пожалуйста, форму ниже</h1>
+
+  <div></div>
+
+  <div style="margin-top: 3rem">
+    <h3>Отчет за неделю {{ date }}</h3>
+    {% if error %}
+      <h3 style="color: indianred">{{ error }}</h3>
+    {% else %}
+      <h3>Введи потраченное время на каждый проект в течение недели (исчисление в процентах)</h3>
+    {% endif %}
+  </div>
+
+  <form name="form" method="post">
+    <div id="my-form">
+      {% for project, p_id in projects %}
+      <div class="input-group mb-3" id="one-str">
+        <span class="input-group-text" id="project">{{ project }}</span>
+        <input type="number" class="form-control" placeholder="Процент затраченного времени" aria-describedby="project" id="time" name={{ p_id }}>
+      </div>
+    {% endfor %}
+    </div>
+
+
+    {% if projects_without_person %}
+
+      <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+        Добавить проект
+      </button>
+
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+        {% for id, project in projects_without_person %}
+        <li><button class="dropdown-item" type="button" onclick="addInput({{ id }})" id="{{ id }}">{{ project }}</button></li>
+        {% endfor %}
+      </ul>
+      </div>
+    {% endif %}
+
+
+    <div style="margin-top: 1em">
+      <input type="submit" class="btn btn-outline-secondary" value="Отправить" style="background-color: navajowhite">
+    </div>
+  </form>
+
+  <script>
+
+    function addInput(id) {
+
+      let projectsArr = '{{ projects_without_person|tojson }}'
+
+
+      let elem = document.createElement("div")
+      elem.className = "input-group mb-3";
+      elem.id = "one-str";
+
+      let span = document.createElement("span");
+      span.className = "input-group-text";
+      span.id = "project";
+      span.innerText = document.getElementById(id).innerText;
+
+      let input = document.createElement("input");
+      input.type = "number";
+      input.className = "form-control";
+      input.placeholder = "Время в процентах";
+      input.ariaDescribedBy = "project";
+      input.name = id;
+
+      elem.innerHTML = span.outerHTML + input.outerHTML;
+
+      document.getElementById("my-form").appendChild(elem)
+    }
+
+  </script>
+
+
+{% endblock %}
